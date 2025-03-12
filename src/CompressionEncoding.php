@@ -50,10 +50,6 @@ enum CompressionEncoding: string
         
         $attributes = $reflector->getAttributes(EncoderAsFunction::class);
         
-        if (count($attributes) === 0) {
-            return null;
-        }
-        
         /** @var \OpenSoutheners\LaravelResponseCompression\EncoderAsFunction $attribute */
         $attribute = $attributes[0]->newInstance();
         
