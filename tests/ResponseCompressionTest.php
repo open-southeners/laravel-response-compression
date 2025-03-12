@@ -91,6 +91,24 @@ class ResponseCompressionTest extends TestCase
             json_encode(['content' => $this->heavyResponseContent])
         );
     }
+    
+    public function testClientGetResponseInThePreferredAsFirstOrderConfiguredEncoding()
+    {
+        config(['response-compression.order' => ['br', 'gzip']]);
+        
+        $response = $this->get('/heavy', ['Accept-Encoding' => implode(', ', [
+            CompressionEncoding::Zstandard->value,
+            CompressionEncoding::Gzip->value,
+            CompressionEncoding::Brotli->value,
+        ])]);
+
+        $response->assertHeader('Content-Encoding', CompressionEncoding::Brotli->value);
+
+        $this->assertEquals(
+            brotli_uncompress($response->getContent()),
+            json_encode(['content' => $this->heavyResponseContent])
+        );
+    }
 
     public function testClientGetResponseAskingAnUnrecognisedEncodingReceivesRawResponse()
     {

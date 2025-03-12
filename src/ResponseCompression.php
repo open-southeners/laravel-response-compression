@@ -78,9 +78,22 @@ class ResponseCompression
      */
     protected function shouldCompressUsing($request): ?array
     {
+        $clientSupportedList = $request->getEncodings();
+        
         $supportedList = CompressionEncoding::listSupported();
         
-        $fromSupportedList = array_intersect($request->getEncodings(), array_keys($supportedList));
+        /** @var string[] $preferenceList */
+        $preferenceList = config('response-compression.order', []);
+
+        if (count($preferenceList) > 0) {
+            $preferenceList = array_merge($preferenceList, array_diff(array_keys($supportedList), $preferenceList));
+        }
+
+        $fromSupportedList = array_intersect(
+            $preferenceList ?: $clientSupportedList,
+            $clientSupportedList,
+            array_keys($supportedList)
+        );
 
         if ($fromSupportedList[0] ?? false) {
             return [$fromSupportedList[0], $supportedList[$fromSupportedList[0]]];

@@ -14,6 +14,8 @@ return [
     */
 
     'enable' => env('RESPONSE_COMPRESSION_ENABLE', true),
+    
+    'order' => explode(',', env('RESPONSE_COMPRESSION_ORDER', '')),
 
     // Threshold size in bytes from where the compression will be applied to responses
     // @see https://docs.aws.amazon.com/apigateway/latest/developerguide/limits.html#http-api-quotas
