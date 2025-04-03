@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.1.1] - 2025-04-03
+
+### Fixed
+
+- `order` option using `RESPONSE_COMPRESSION_ORDER` when not set was not using the default behaviour of this package
+
 ## [3.1.0] - 2025-03-12
 
 ### Added
