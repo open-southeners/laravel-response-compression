@@ -83,7 +83,7 @@ class ResponseCompression
         $supportedList = CompressionEncoding::listSupported();
         
         /** @var string[] $preferenceList */
-        $preferenceList = config('response-compression.order', []);
+        $preferenceList = array_filter(config('response-compression.order', []));
 
         if (count($preferenceList) > 0) {
             $preferenceList = array_merge($preferenceList, array_diff(array_keys($supportedList), $preferenceList));
