@@ -15,6 +15,8 @@ return [
 
     'enable' => env('RESPONSE_COMPRESSION_ENABLE', true),
     
+    'debug' => env('RESPONSE_COMPRESSION_DEBUG', false),
+    
     'order' => explode(',', env('RESPONSE_COMPRESSION_ORDER', '')),
 
     // Threshold size in bytes from where the compression will be applied to responses

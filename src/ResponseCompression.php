@@ -23,12 +23,24 @@ class ResponseCompression
             if ($this->shouldCompressResponse($response) && $compressionAlgorithm !== null) {
                 [$algo, $function] = $compressionAlgorithm;
 
+                $originalResponseContent = $response->getContent();
+                $originalResponseSize = strlen($originalResponseContent);
+                
                 /** @var string $compressedContent */
                 $compressedContent = call_user_func(
                     $function,
                     $response->getContent(),
                     config("response-compression.level.{$algo}", 9)
                 );
+                
+                if (config('response-compression.debug', false) && function_exists('logger')) {
+                    logger(
+                        sprintf('Laravel response compressed from %d bytes to %d bytes using %s', $originalResponseSize, strlen($compressedContent), $algo),
+                        [
+                            'threshold' => config('response-compression.threshold', 10000),
+                        ]
+                    );
+                }
                 
                 $response->setContent($compressedContent);
 
