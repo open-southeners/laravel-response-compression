@@ -101,11 +101,11 @@ class ResponseCompression
             $preferenceList = array_merge($preferenceList, array_diff(array_keys($supportedList), $preferenceList));
         }
 
-        $fromSupportedList = array_intersect(
+        $fromSupportedList = array_values(array_intersect(
             $preferenceList ?: $clientSupportedList,
             $clientSupportedList,
             array_keys($supportedList)
-        );
+        ));
 
         if ($fromSupportedList[0] ?? false) {
             return [$fromSupportedList[0], $supportedList[$fromSupportedList[0]]];
