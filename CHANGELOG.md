@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.2.2] - 2025-04-11
+
+### Fixed
+
+- Some typing errors for PHPStan
+- Some testing errors
+
+### Added
+
+- Laravel 13 support
+
+### Removed
+
+- Laravel 11 support
+
 ## [3.2.1] - 2025-04-08
 
 ### Fixed
