@@ -4,6 +4,7 @@ namespace OpenSoutheners\LaravelResponseCompression;
 
 use Closure;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ResponseCompression
@@ -23,13 +24,13 @@ class ResponseCompression
             if ($this->shouldCompressResponse($response) && $compressionAlgorithm !== null) {
                 [$algo, $function] = $compressionAlgorithm;
 
-                $originalResponseContent = $response->getContent();
+                $originalResponseContent = $this->getResponseContent($response);
                 $originalResponseSize = strlen($originalResponseContent);
                 
                 /** @var string $compressedContent */
                 $compressedContent = call_user_func(
                     $function,
-                    $response->getContent(),
+                    $originalResponseContent,
                     config("response-compression.level.{$algo}", 9)
                 );
                 
@@ -62,7 +63,7 @@ class ResponseCompression
      *
      * @param  \Symfony\Component\HttpFoundation\Response  $response
      */
-    protected function shouldCompressResponse($response): bool
+    protected function shouldCompressResponse(Response $response): bool
     {
         if (
             $response instanceof BinaryFileResponse
@@ -94,8 +95,12 @@ class ResponseCompression
         
         $supportedList = CompressionEncoding::listSupported();
         
+        $configuredOrder = config('response-compression.order', []);
+
         /** @var string[] $preferenceList */
-        $preferenceList = array_filter(config('response-compression.order', []));
+        $preferenceList = is_array($configuredOrder)
+            ? array_values(array_filter($configuredOrder, static fn ($value): bool => is_string($value) && $value !== ''))
+            : [];
 
         if (count($preferenceList) > 0) {
             $preferenceList = array_merge($preferenceList, array_diff(array_keys($supportedList), $preferenceList));
@@ -112,5 +117,12 @@ class ResponseCompression
         }
         
         return null;
+    }
+
+    protected function getResponseContent(Response $response): string
+    {
+        $content = $response->getContent();
+
+        return is_string($content) ? $content : '';
     }
 }
