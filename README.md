@@ -16,7 +16,7 @@ Or on our blog article: https://opensoutheners.com/how-to-prevent-large-response
 ## Getting started
 
 ```bash
-composer require open-southeners/laravel-vapor-response-compression
+composer require open-southeners/laravel-response-compression
 ```
 
 Then publish the configuration file defaults into your application's config folder:
